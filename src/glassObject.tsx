@@ -1,5 +1,6 @@
+import { Suspense } from "react";
 import { Canvas, useFrame, useLoader } from "@react-three/fiber";
-import { Suspense, useRef, useEffect } from "react";
+import { useRef, useEffect } from "react";
 import { OBJLoader } from "three/examples/jsm/loaders/OBJLoader";
 import { OrbitControls, Environment } from '@react-three/drei';
 import { Html } from '@react-three/drei';

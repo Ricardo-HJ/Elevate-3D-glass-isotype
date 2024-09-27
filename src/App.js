@@ -1,4 +1,4 @@
-import GlassCube from './glassObject.tsx';
+import GlassCube from './glass2.tsx';
 import './App.css';
 
 function App() {
