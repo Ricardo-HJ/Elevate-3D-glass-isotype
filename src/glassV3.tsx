@@ -1,0 +1,89 @@
+"use client"
+
+import { Canvas, useLoader, useFrame } from "@react-three/fiber"
+import { OBJLoader } from "three-stdlib"
+import { Environment, OrbitControls, useGLTF } from "@react-three/drei"
+import * as THREE from "three"
+import React, { useRef, Suspense } from "react"
+
+function IridescentObject() {
+  const objRef = useRef<THREE.Group>()
+  const materialRef = useRef<THREE.MeshPhysicalMaterial>(
+    
+  )
+
+  // Load the OBJ file
+  const obj = useLoader(OBJLoader, "/model.obj")
+
+  // Clone the geometry to ensure we're not modifying the original
+  const clonedObj = obj.clone()
+
+  // Apply material to all meshes in the object
+  clonedObj.traverse((child) => {
+    if (child instanceof THREE.Mesh) {
+      child.material = materialRef.current
+    }
+  })
+
+  useFrame(({ clock }) => {
+    if (materialRef.current) {
+      materialRef.current.iridescenceIOR = 1.5 + Math.sin(clock.getElapsedTime()) * 0.2
+      materialRef.current.iridescenceThicknessRange = [200 + Math.sin(clock.getElapsedTime() * 0.5) * 100, 800 + Math.cos(clock.getElapsedTime() * 0.5) * 200]
+    }
+    if (objRef.current) {
+      objRef.current.rotation.y += 0.005
+    }
+  })
+
+  return (
+    <primitive object={clonedObj} ref={objRef} scale={[0.1, 0.1, 0.1]}>
+      <meshPhysicalMaterial
+        ref={materialRef}
+        roughness={0.1}
+        transmission={0.9}
+        thickness={0.5}
+        ior={2.5}
+        iridescence={1}
+        iridescenceIOR={1.5}
+        iridescenceThicknessRange={[200, 1600]}
+        clearcoat={1}
+        clearcoatRoughness={0.1}
+        metalness={0.4}
+        color="#000000"
+        emissive="#111111"
+        side={THREE.DoubleSide}
+        transparent={true}
+        opacity={0.9}
+        attenuationColor="#ff00ff"
+        attenuationDistance={0.5}
+      />
+    </primitive>
+  )
+}
+
+function Fallback() {
+  return (
+    <mesh>
+      <sphereGeometry args={[1, 32, 32]} />
+      <meshStandardMaterial color="hotpink" />
+    </mesh>
+  )
+}
+
+export default function Component() {
+  return (
+    <div className="w-full h-screen" style={{ width: '100%', height: '100%', backgroundColor: "#151519" }}>
+      <Canvas camera={{ position: [0, 0, 5] }}>
+        <color attach="background" args={["#141418"]} />
+        <ambientLight intensity={0.2} />
+        <spotLight position={[10, 10, 10]} angle={0.15} penumbra={1} intensity={1} castShadow color="#ff00ff" />
+        <pointLight position={[-10, -10, -10]} intensity={0.5} color="#00ffff" />
+        <Suspense fallback={<Fallback />}>
+          <IridescentObject />
+        </Suspense>
+        <OrbitControls autoRotate />
+        <Environment preset="night" background={false} />
+      </Canvas>
+    </div>
+  )
+}

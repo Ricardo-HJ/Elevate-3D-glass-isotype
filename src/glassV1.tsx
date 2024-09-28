@@ -1,14 +1,14 @@
+import React, { useRef, useEffect} from "react";
 import { Suspense } from "react";
 import { Canvas, useFrame, useLoader } from "@react-three/fiber";
-import { useRef, useEffect } from "react";
-import { OBJLoader } from "three/examples/jsm/loaders/OBJLoader";
+import { OBJLoader } from "three-stdlib";
 import { OrbitControls, Environment } from '@react-three/drei';
 import { Html } from '@react-three/drei';
 import * as THREE from "three";
 
 function Model({ url }) {
-  const obj = useLoader(OBJLoader, url);
-  const ref = useRef<THREE.Group>();
+  const obj = useLoader(OBJLoader, url) as THREE.Group;
+  const ref = useRef<THREE.Group>(null);
 
   useEffect(() => {
     if (ref.current) {
@@ -30,23 +30,28 @@ function Model({ url }) {
 
   return (
     <group ref={ref}>
-      {obj.children.map((child, index) => (
-        <mesh key={index} geometry={child.geometry} castShadow receiveShadow>
-          <meshPhysicalMaterial
-            color={'#ffffff'} // Keep base color white
-            transparent={true} // Enable transparency
-            opacity={0.9} // Make it slightly transparent
-            roughness={0.05} // Low roughness for smooth reflections
-            metalness={0.8} // High metalness for metallic glass effect
-            transmission={1} // Full transmission for glass
-            ior={1.5} // Refraction index for glass
-            reflectivity={1} // High reflectivity for glass effect
-            clearcoat={1} // Add clearcoat for glossy finish
-            clearcoatRoughness={0} // Smooth clearcoat
-            envMapIntensity={2} // Increase the intensity of environment reflections
-          />
-        </mesh>
-      ))}
+      {obj.children.map((child, index) => {
+        if (child instanceof THREE.Mesh) {
+          return (
+            <mesh key={index} geometry={child.geometry} castShadow receiveShadow>
+              <meshPhysicalMaterial
+                color={'#ffffff'} // Keep base color white
+                transparent={true} // Enable transparency
+                opacity={0.9} // Make it slightly transparent
+                roughness={0.05} // Low roughness for smooth reflections
+                metalness={0.8} // High metalness for metallic glass effect
+                transmission={1} // Full transmission for glass
+                ior={1.5} // Refraction index for glass
+                reflectivity={1} // High reflectivity for glass effect
+                clearcoat={1} // Add clearcoat for glossy finish
+                clearcoatRoughness={0} // Smooth clearcoat
+                envMapIntensity={2} // Increase the intensity of environment reflections
+              />
+            </mesh>
+          );
+        }
+        return null;
+      })}
     </group>
   );
 }
