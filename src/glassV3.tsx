@@ -37,21 +37,21 @@ function IridescentObject() {
     <primitive object={clonedObj} ref={objRef} scale={[0.1, 0.1, 0.1]}>
       <meshPhysicalMaterial
         ref={materialRef}
-        roughness={0.1}
-        transmission={0.9}
-        thickness={0.5}
-        ior={2.5}
+        roughness={0.3}
+        transmission={0.8}
+        thickness={0.9}
+        ior={3}
         iridescence={1}
-        iridescenceIOR={2.5}
+        iridescenceIOR={3}
         iridescenceThicknessRange={[200, 1600]}
-        clearcoat={1}
+        clearcoat={1.5}
         clearcoatRoughness={0.1}
         metalness={0.4}
         color="#000000"
         emissive="#111111"
         side={THREE.DoubleSide}
         transparent={true}
-        opacity={0.9}
+        opacity={0.8}
         attenuationColor="#ff00ff"
         attenuationDistance={0.5}
       />
