@@ -73,8 +73,12 @@ export default function Component() {
       <div className="w-full h-screen" style={{ width: '100%', height: '100%', backgroundColor: "#151519" }}>
         <Canvas camera={{ position: [0, 0, 5] }}>
           <color attach="background" args={["#141418"]} />
-          {/* Subtle ambient light to affect overall scene */}
-          <ambientLight intensity={0.4} color="#ffffff" />
+          {/* Brighter ambient light to enhance iridescent effect */}
+          <ambientLight intensity={1.0} color="#ffffff" />
+            
+            {/* Additional colored ambient lights to create an iridescent look */}
+          <ambientLight intensity={0.6} color="#ff66ff" />
+          <ambientLight intensity={0.6} color="#00ffff" />
   
           {/* Soft, indirect lighting to add color without being harsh */}
           <spotLight position={[10, 10, 10]} angle={0.3} penumbra={0.7} intensity={0.5} color="#ff00ff" />
